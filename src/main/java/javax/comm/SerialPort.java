@@ -27,6 +27,13 @@ public abstract class SerialPort extends CommPort
         /* TODO */
     }
 
+    @Override
+    public void close()
+    {
+        super.close();
+        this.removeEventListener();
+    }
+
     public abstract int getBaudRate();
 
     public abstract int getDataBits();

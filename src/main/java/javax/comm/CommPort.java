@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class CommPort
+public abstract class CommPort implements AutoCloseable
 {
     protected String name;
 
@@ -23,9 +23,21 @@ public abstract class CommPort
 
     public abstract OutputStream getOutputStream() throws IOException;
 
+    @Override
     public void close()
     {
-        /* TODO */
+        CommPortIdentifier identifier;
+        try
+        {
+            identifier = CommPortIdentifier.getPortIdentifier(this);
+        }
+        catch (NoSuchPortException e)
+        {
+            /* If the port has already been delisted, e.g. due to hardware
+             * disconnect, then there's no ownership to clean up. */
+            return;
+        }
+        identifier.releaseOwnership();
     }
 
     public abstract void enableReceiveThreshold(int thresh) throws UnsupportedCommOperationException;
