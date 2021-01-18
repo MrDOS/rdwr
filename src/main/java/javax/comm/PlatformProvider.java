@@ -11,7 +11,12 @@ class PlatformProvider
             return PlatformProvider.OVERRIDE;
         }
 
-        /* TODO: Platform detection/mapping. */
+        String os = System.getProperty("os.name");
+
+        if (os.contains("Mac"))
+        {
+            return new MacPlatform();
+        }
 
         throw new UnsupportedPlatformException();
     }
